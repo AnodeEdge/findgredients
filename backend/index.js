@@ -1,20 +1,22 @@
+const requestHandler = require("./helpers/edemamRequestHandler");
 const express = require("express");
-// const bodyPraser = require('body-parser')
 const cors = require("cors");
-
 const app = express();
 const port = 5000;
 
-const edamamAppID = "adf318f9";
-const edamamApiKey = "246ca4737cfa9f606088ce77431a86ee";
-
 app.use(cors());
 
-app.get("/", (req, res) => {
-    console.log(req.query.q)
-    res.json({query: req.query.q});
+app.get("/", (request, response) => {
+  console.log(request.query)
+  response.json({ query: request.query.q });
 });
 
+app.get("/recipes", async (request, response) => {
+  console.log("Request query contains: " + JSON.stringify(request.query)) 
+  let data = await requestHandler.getRecipes(request.query)
+  response.json(data.data)
+})
+
 app.listen(port, () =>
-  console.log(`Hello world app listening on port ${port}`)
+  console.log(`Findgredient API listening on port ${port}`)
 );
