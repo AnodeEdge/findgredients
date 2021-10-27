@@ -16,6 +16,10 @@ function Recipe(props) {
         }))
     }
 
+    const addFavorite = (evt) => {
+
+    }
+
     const displayNutrition = () => {
         const caloriesPerServing = Math.round(recipeData.calories / recipeData.yield)
         return (
@@ -50,10 +54,13 @@ function Recipe(props) {
 
     return (
         <div>
+            {console.log(Data)}
             {console.log(recipeData)}
             {recipeData.label}
             {/* show title */}
             <Image src={recipeData.image} />
+            {/* Show save button */}
+            <button onClick={addFavorite}>Add to Favorites</button>
             {/* show image */}
             {displayIngredients()}
             {/* show ingredient list */}

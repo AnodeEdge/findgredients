@@ -1,31 +1,41 @@
 const express = require('express')
 const cors = require('cors')
-const requestHandler = require('./helpers/edemamRequestHandler')
-
-
-// import express from 'express'
-// import cors from 'cors'
-// import { getRecipes } from '../old/helpers/edemamRequestHandler'
-// import mongoose from 'mongoose'
-// import Favorite from '../old/models/Favorites'
-// import User from './models/User'
+const passport = require('passport');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose')
+const User = require('./model/Users')
+const Favorite = require('./model/Favorites')
+require('./auth/auth');
+const routes = require('./routes/routes');
+const secureRoute = require('./routes/secure-routes');
 
 const app = express();
 const port = 5000;
 
 app.use(express.urlencoded({extended: true}))
 app.use(cors());
+app.use('/', routes)
+dbConnect().catch(err => console.log(err))
 
-app.get("/", (request, response) => {
-  console.log(request.query)
-  response.json({ query: request.query.q });
-});
+async function dbConnect() {
+  await mongoose.connect('mongodb://localhost:27017/findgredients')
+  mongoose.connection.on('error', error => console.log(error) )
+  mongoose.Promise = global.Promise
+}
 
-app.get("/recipes", async (request, response) => {
-  console.log("Request query contains: " + JSON.stringify(request.query)) 
-  let data = await requestHandler.getRecipes(request.query)
-  response.json(data.data)
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error: '))
+db.once('open', function () {
+  console.log("Database Connection Successful!")
 })
+
+app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute);
+
+//Error handling
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.json({ error: err });
+});
 
 app.listen(port, () =>
   console.log(`Findgredient API listening on port ${port}`)

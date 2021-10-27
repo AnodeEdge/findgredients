@@ -41,15 +41,14 @@ function SearchPage(props) {
       <IngredientSearch
         setSearchValues={props.setSearchValues}
         searchValues={props.searchValues} />
-      <button onClick={handleSubmit}>Submit</button>
       <HealthLabelsDropdown setHealthLabels={setHealthLabels}></HealthLabelsDropdown>
       <DietLabelDropdown setDietLabel={setDietLabel}></DietLabelDropdown>
+      <button onClick={handleSubmit}>Apply Changes</button>
       <RecipeGrid
         recipeData={props.results}
         setSelectedRecipe={props.setSelectedRecipe} />
       {props.hasPrevResults ? <button onClick={handlePrev}>Prev</button> : null }
       {hasNext ? <button onClick={handleNext}>Next</button> : null}
-      
     </>
   )
 }
