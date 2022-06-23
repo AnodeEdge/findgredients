@@ -16,7 +16,7 @@ const FavoriteSchema = new Schema({
   image: {
     type: String,
   },
-})
+}, { _id: false })
 
 const UserSchema = new Schema({
   email: {
